@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
 import Stage from './Stage';
 import { gsap } from 'gsap';
-import Howl from 'howler';
+import { Howl } from 'howler';
 import Enemy from "./Enemy";
 
 
@@ -56,39 +56,32 @@ class Game {
 
 
 
-//         let myBoxPosX = [100,400,600]
+        let myBoxArray = [
+          './assets/images/left_box.png',
+          './assets/images/middle_box.png',
+          './assets/images/right_box.png'
+        ];
+        let myBoxPosX = [75,400,700]
 
-//         for (let i=0; i<3;i++){
+        for (let i=0; i<3;i++){
 
-//           let box = PIXI.Texture.from(myBoxArrey[i]);
-//           let _box = new PIXI.Sprite(box);
-//           _box.x=myBoxPosX[i];
-//           _box.y=450
-//           _box.zIndex=1;
-//           this.scene.addChild(_box);
-//         }
+          let box = PIXI.Texture.from(myBoxArray[i]);
+          let _box = new PIXI.Sprite(box);
+          _box.x=myBoxPosX[i];
+          _box.y=450
+          _box.zIndex=1;
+          this.scene.addChild(_box);
+        }
        
-// // let test = PIXI.Texture.from("./assets/images/background.jpg");
-// // let testi = new PIXI.Sprite(testi);
-// // this.scene.addChild(testi)
-
-
-// let test = PIXI.Texture.from("./assets/images/background_night.jpg")
-// let testi = new PIXI.Sprite(test);
-// testi.zIndex=2;
-// testi.anchor.set(0.5);
-// testi.x=512;
-// testi.y=385;
-// this.scene.addChild(testi);
 
 
 
 
-// this.si.app.stage.on("pointerdown",(event) =>{
-// console.log("pop")
-// this.ninja.stop();
-// this.ninja.texture= PIXI.Texture.from("../assets/images/ninja-jump.png")
-// });
+this.si.app.stage.on("pointerdown",(event) =>{
+console.log("pop")
+this.ninja.stop();
+this.ninja.texture= PIXI.Texture.from("../assets/images/ninja-jump.png")
+});
 
         this.si.app.stage.interactive = true;
 
@@ -152,23 +145,104 @@ class Game {
         play.buttonMode = true;
         this.scene.addChild(play);
 
+        
+
+ let sunTexture = PIXI.Texture.from('./assets/images/sun.png'); // Roterende sol
+        this.sun = new PIXI.Sprite(sunTexture);
+        this.sun.interactive = true;
+        this.sun.anchor.set(0.5);
+        this.sun.x = 0;
+        this.sun.y = -100;
+        this.scene.addChild(this.sun);
+
+        // Rotationen
+        gsap.to(this.sun, {
+          duration: 18 * 100, // 18 sekunder
+          rotation: 360,
+          repeat: -1,
+        });
+
+// Sol ned
+        gsap.to(this.sun, {
+          duration: 2, // 2 sekunder
+          x: 150,
+          y: 150,
+          ease: 'Elastic.easeInOut'
+        });
+        
+      // Sol op  
+        gsap.to(this.sun, {
+          duration: 2, // 2 sekunder
+          delay: 4, // Ventetid før animation skal køre
+          x: 300,
+          y: -100,
+          ease: 'Elastic.easeInOut'
+        });
+
+        setTimeout(() => {
+          let test2 = PIXI.Texture.from("./assets/images/background_night.jpg")
+          let testi2 = new PIXI.Sprite(test2);
+          testi2.zIndex=2;
+          this.background.addChild(testi2);
+        },5.5 * 1000);
+
+
+        let moonTexture = PIXI.Texture.from('./assets/images/moon.png'); // Roterende Måne
+        this.moon = new PIXI.Sprite(moonTexture);
+        this.moon.interactive = true;
+        this.moon.anchor.set(0.5);
+        this.moon.x = 0;
+        this.moon.y = -100;
+        this.scene.addChild(this.moon);
+
+        // // Rotationen
+        // gsap.to(this.moon, {
+        //   duration: 18 * 100, // 18 sekunder
+        //   rotation: 360,
+        //   repeat: -1,
+        // });
+
+// Måne ned
+        gsap.to(this.moon, {
+          duration: 2, // 2 sekunder
+          delay:6,
+          x: 150,
+          y: 150,
+          ease: 'Elastic.easeInOut'
+        });
+        
+      // Måne op  
+        gsap.to(this.moon, {
+          duration: 4, // 2 sekunder
+          delay: 10, // Ventetid før animation skal køre
+          x: 300,
+          y: -100,
+          ease: 'Elastic.easeInOut'
+        });
+
+
+
+
+
 
         play.on('pointerdown', (event) => {
 
           event.stopPropagation();
           this.si.app.stage.interactive = true;
 
-     
+            
 
           gsap.to(event.currentTarget, {
             duration: 0.9,
             delay: 0.2,
             y: play.y - 350,
             ease: 'Elastic.easeInOut', //easeInOut såger for at den starter og slutter
-
-
-            
           });
+
+
+
+
+
 
 
           let soundSwirp = new Howl({
@@ -184,13 +258,15 @@ class Game {
             this.enemy = new Enemy({
                 name:res.alienspine,
 
+              });
 
-        //    let sound = new Howl({
-        //       src:['./assets/sound/musicloop.mp3'],
-        //       autoplay: true,
-        //       loop: true,
+           this.howl = new Howl({
+              src:['./assets/sound/musicloop.mp3'],
+              autoplay: true,
+              loop: true,
 
-           });
+           })
+           this.howl.play();
 
         });
       }); //END Loader
